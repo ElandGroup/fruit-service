@@ -1,7 +1,6 @@
 ﻿package main
 
 import (
-	"fmt"
 	"goApiSample/api"
 	"goApiSample/config"
 	"goApiSample/model"
@@ -12,9 +11,8 @@ import (
 
 func init() {
 	config.InitConfig("config/config.json")
-	//model.InitDB("mssql", config.Config.SampleMssql.Conn) //mssql,mysql
-	model.InitDB("mysql", config.Config.SampleMysql.Conn) //mssql,mysql
-	fmt.Println(config.Config.SampleMysql.Conn)
+	model.InitDB("mssql", config.Config.SampleMssql.Conn) //mssql,mysql
+	//model.InitDB("mysql", config.Config.SampleMysql.Conn) //mssql,mysql
 	//model.InitMssql("adodb", config.Config.Sample.Conn)
 
 }

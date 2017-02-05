@@ -3,6 +3,7 @@ package model
 import (
 	"log"
 
+	_ "github.com/denisenkom/go-mssqldb"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 )
@@ -23,4 +24,6 @@ func InitDB(dialect, conn string) {
 	//Db.ShowSQL(true)
 	//Db.SetColumnMapper(core.SameMapper{})
 	Db.Sync2(new(Fruit))
+	//Db.SetTableMapper(core.SameMapper{})
+	//Db.SetColumnMapper(core.SameMapper{})
 }

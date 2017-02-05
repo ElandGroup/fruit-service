@@ -4,11 +4,11 @@ import "fmt"
 import "sync"
 
 type Fruit struct {
-	Name      string
-	Price     float32
-	Color     string
-	Code      string
-	StoreCode string
+	Code      string  `xorm:"varchar(20) pk notnull 'Code'"`
+	Name      string  `xorm:"'Name'"`
+	Price     float32 `xorm:"'Price'"`
+	Color     string  `xorm:"'Color'"`
+	StoreCode string  `xorm:"'StoreCode'"`
 }
 
 func (Fruit) Find() (fruits []*Fruit, err error) {
