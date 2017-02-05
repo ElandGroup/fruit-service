@@ -1,0 +1,10 @@
+{
+
+    "SampleMssql":{
+         "Conn":"driver={sql server};Server=182.92.65.253;port=1433;Database=SampleDB;user id=fruit;password=Eland123;"
+    },
+     "SampleMysql":{
+         "Conn":"root:Eland123@tcp(10.202.101.13:3306)/sampledb?charset=utf8&parseTime=True&loc=UTC"
+    }
+
+}
