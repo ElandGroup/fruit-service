@@ -1,9 +1,12 @@
 package main
 
-import "github.com/labstack/echo"
+import (
+	"goApiSample/sample"
+)
 
 func main() {
-	e := echo.New()
-	InitApi(e)
-	e.Start(":1111")
+	sample.Sampleinit()
+	//e := echo.New()
+	//InitApi(e)
+	//e.Start(":1111")
 }
