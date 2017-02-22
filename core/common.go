@@ -1,10 +1,10 @@
-package model
+package core
 
 type (
 	APIResult struct {
-		Result  interface{} `json:"result"`
 		Success bool        `json:"success"`
-		Error   APIError    `json:"error"`
+		Result  interface{} `json:"result"`
+		Error   *APIError   `json:"error"`
 	}
 
 	QueryResult struct {
@@ -14,16 +14,18 @@ type (
 
 	APIError struct {
 		Code    int         `json:"code"`
-		Details interface{} `json:"details"`
 		Message string      `json:"message"`
+		Details interface{} `json:"details"`
 	}
 )
 
 type (
 	APIParam struct {
-		SkinCount      int
+		SkipCount      int
 		MaxResultCount int
 		Fields         string
 		Sort           string
+		SortAsc        string
+		SortDesc       string
 	}
 )
