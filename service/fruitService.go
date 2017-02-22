@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	. "goApiSample/core"
 	. "goApiSample/core/dto"
 	"goApiSample/core/helper"
@@ -42,23 +41,26 @@ func (FruitService) Get(code string) (has bool, fruit *Fruit, err error) {
 	return dao.GetFruitDao().Get(code)
 }
 
-func (f *FruitService) Post(fruit *[]Fruit) (affectedRows int64, apiError *APIError) {
+func (f *FruitService) Post(fruit *[]Fruit) (apiError *APIError) {
 	keys := []string{}
 	for _, v := range *fruit {
 		keys = append(keys, v.Code)
 	}
 	dupplicationData, e := f.Exists(keys)
 	if e != nil {
-		return 0, helper.NewApiError(10001, e.Error())
+		apiError = helper.NewApiError(10001, e.Error())
+		return
 	} else if len(dupplicationData) != 0 {
-		fmt.Println(strings.Join(dupplicationData[:], ","))
-		return 0, helper.NewApiError(10012, "", strings.Join(dupplicationData[:], ","))
+		apiError = helper.NewApiError(10012, "", strings.Join(dupplicationData[:], ","))
+		return
 	}
-	var err error
-	affectedRows, err = dao.GetFruitDao().Post(fruit)
+	affectedRows, err := dao.GetFruitDao().Post(fruit)
 	if err != nil {
-		affectedRows = 0
 		apiError = helper.NewApiError(10001, "", err.Error())
+	} else if affectedRows == 0 {
+		apiError = helper.NewApiError(10007, "")
+	} else {
+		apiError = nil
 	}
 	return
 }

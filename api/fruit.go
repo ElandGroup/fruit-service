@@ -44,20 +44,6 @@ func Find(c echo.Context) error {
 //to be
 func ParseReturnFields(objArray interface{}, fields []string) (returnMaps []map[string]interface{}) {
 
-	// switch realArray := objArray.(realType) {
-	// case []Fruit:
-	// 	for _, obj := range realArray {
-	// 		returnMap := make(map[string]interface{})
-	// 		for _, k := range fields {
-	// 			returnMap[k], _ = reflections.GetField(obj, k)
-	// 		}
-	// 		returnMaps = append(returnMaps, returnMap)
-	// 	}
-	// 	return
-	// default:
-	// 	return nil
-	// }
-
 	if realArray, ok := objArray.([]Fruit); ok == false {
 		return nil
 	} else {
@@ -89,16 +75,12 @@ func Post(c echo.Context) error {
 	if err := c.Bind(fruitsParam); err != nil {
 		return c.JSON(http.StatusBadRequest, helper.NewApiMessage(10004, err.Error(), "Array"))
 	} else {
-		// if has, _, e := service.GetFruitService().Get(fruitsParam.Code); e != nil {
-		// 	return c.JSON(http.StatusInternalServerError, helper.SystemMessage(e.Error()))
-		// } else {
-		// 	return c.JSON(http.StatusNotFound, helper.NewApiMessage(10010, "", "Code:"+fruitsParam.Code))
-		// }
-
-		if affectedRows, apiError := service.GetFruitService().Post(fruitsParam); apiError != nil {
-			return c.JSON(http.StatusInternalServerError, apiError)
-		} else if affectedRows == 0 {
-			return c.JSON(http.StatusOK, helper.NewApiMessage(10010, ""))
+		if apiError := service.GetFruitService().Post(fruitsParam); apiError != nil {
+			if apiError.Code == 10001 {
+				return c.JSON(http.StatusInternalServerError, apiError)
+			} else {
+				return c.JSON(http.StatusOK, apiError)
+			}
 		} else {
 			return c.JSON(http.StatusCreated, APIResult{Success: true, Result: nil})
 		}
