@@ -12,28 +12,6 @@ type FruitService struct {
 }
 
 func (FruitService) Find(dto *FruitQuery) (fruits []Fruit, err error) {
-	//2.parse apiParam
-	if dto.MaxResultCount == 0 {
-		dto.MaxResultCount = 10
-	} else if dto.MaxResultCount > 100 {
-		dto.MaxResultCount = 100
-	}
-	if len(dto.Sort) != 0 {
-		sortTemp := strings.Split(dto.Sort, ",")
-		for _, v := range sortTemp {
-			if v[0:1] == "-" {
-				dto.SortDesc += "," + v[1:]
-			} else {
-				dto.SortAsc += "," + v
-			}
-		}
-		if len(dto.SortDesc) > 0 {
-			dto.SortDesc = dto.SortDesc[1:]
-		}
-		if len(dto.SortAsc) > 0 {
-			dto.SortAsc = dto.SortAsc[1:]
-		}
-	}
 	return dao.GetFruitDao().Find(dto)
 }
 

@@ -4,8 +4,6 @@ import (
 	"goApiSample/core/helper"
 	"net/http"
 
-	reflections "gopkg.in/oleiade/reflections.v1"
-
 	. "goApiSample/core"
 	. "goApiSample/core/dto"
 	"goApiSample/service"
@@ -21,9 +19,9 @@ func Find(c echo.Context) error {
 	if err := c.Bind(&dto); err != nil {
 		return c.JSON(http.StatusBadRequest, helper.NewApiMessage(10004, err.Error(), "Object"))
 	}
-	errParam := helper.CheckFieldParams(dto.Fields, &Fruit{})
-	if len(errParam) != 0 {
-		return c.JSON(http.StatusBadRequest, helper.NewApiMessage(10011, "", errParam))
+	//1.check condition
+	if apiMessage := helper.CheckQueryCondition(&dto.APIParam, Fruit{}); apiMessage != nil {
+		return c.JSON(http.StatusBadRequest, apiMessage)
 	}
 
 	//3.Query data
@@ -31,32 +29,15 @@ func Find(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, helper.SystemMessage(err.Error()))
 	} else {
 		if len(fruits) == 0 {
-			fruits = make([]Fruit, 0)
+			return c.JSON(http.StatusOK, APIResult{Success: true, Result: QueryResult{TotalCount: len(fruits), Items: make([]interface{}, 0)}})
 		}
-		if len(dto.Fields) == 0 {
-			return c.JSON(http.StatusOK, APIResult{Success: true, Result: QueryResult{TotalCount: len(fruits), Items: fruits}})
+		if len(dto.Fields) != 0 {
+			fields := strings.Split(dto.Fields, ",")
+			return c.JSON(http.StatusOK, APIResult{Success: true, Result: QueryResult{TotalCount: len(fruits), Items: helper.FilterFieldsMap(fruits, fields)}})
 		} else {
-			return c.JSON(http.StatusOK, APIResult{Success: true, Result: QueryResult{TotalCount: len(fruits), Items: ParseReturnFields(fruits, strings.Split(dto.Fields, ","))}})
+			return c.JSON(http.StatusOK, APIResult{Success: true, Result: QueryResult{TotalCount: len(fruits), Items: fruits}})
 		}
 	}
-}
-
-//to be
-func ParseReturnFields(objArray interface{}, fields []string) (returnMaps []map[string]interface{}) {
-
-	if realArray, ok := objArray.([]Fruit); ok == false {
-		return nil
-	} else {
-		for _, obj := range realArray {
-			returnMap := make(map[string]interface{})
-			for _, k := range fields {
-				returnMap[k], _ = reflections.GetField(obj, k)
-			}
-			returnMaps = append(returnMaps, returnMap)
-		}
-		return
-	}
-
 }
 
 func Get(c echo.Context) error {
