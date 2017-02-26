@@ -87,3 +87,22 @@ func Patch(c echo.Context) error {
 		}
 	}
 }
+
+func Delete(c echo.Context) error {
+	var code string
+	if code = c.Param("Code"); len(code) == 0 {
+		return c.JSON(http.StatusBadRequest, helper.NewApiMessage(10009, "", "Code"))
+	} else {
+		if apiError := service.GetFruitService().Delete(code); apiError != nil {
+			if apiError.Code == 10001 {
+				return c.JSON(http.StatusInternalServerError, apiError)
+			} else if apiError.Code == 10010 {
+				return c.JSON(http.StatusNotFound, apiError)
+			} else {
+				return c.JSON(http.StatusOK, apiError)
+			}
+		} else {
+			return c.JSON(http.StatusNoContent, APIResult{Success: true, Result: nil})
+		}
+	}
+}

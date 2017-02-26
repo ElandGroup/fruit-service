@@ -36,6 +36,11 @@ func (FruitDao) Patch(code string, fruit *Fruit) (affectedrow int64, err error) 
 	return Db.Cols("Price").Where("code=?", code).Update(fruit)
 }
 
+func (FruitDao) Delete(code string) (affectedrow int64, err error) {
+	fruit := &Fruit{Code: code}
+	return Db.Where("code=?", code).Delete(fruit)
+}
+
 func (FruitDao) Query(dto *FruitQuery) (session *xorm.Session) {
 	sqlText := ""
 	if len(dto.Fields) != 0 {

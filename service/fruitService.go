@@ -48,6 +48,28 @@ func (FruitService) Patch(code string, fruit *Fruit) (affectedrow int64, err err
 
 	//return model.Db.Id(fruit.Code).Update(fruit)
 }
+func (f *FruitService) Delete(code string) (apiError *APIError) {
+	var affectedrow int64
+	var err error
+	var has bool
+	if has, _, err = f.Get(code); err != nil {
+		apiError = helper.NewApiError(10001, err.Error())
+		return
+	} else if has == false {
+		apiError = helper.NewApiError(10010, "", "Code:"+code)
+		return
+	}
+
+	if affectedrow, err = dao.GetFruitDao().Delete(code); err != nil {
+		apiError = helper.NewApiError(10001, err.Error())
+		return
+	} else if affectedrow == 0 {
+		apiError = helper.NewApiError(10007, "")
+		return
+	}
+
+	return
+}
 
 func (FruitService) Exists(keys []string) (existKeys []string, err error) {
 	return dao.GetFruitDao().Exists(keys)

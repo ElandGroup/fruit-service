@@ -30,5 +30,6 @@ func InitApi(e *echo.Echo) {
 	v1.GET("/fruits/:Code", api.Get)
 	v1.POST("/fruits", api.Post)
 	v1.PATCH("/fruits/:Code", api.Patch)
+	v1.DELETE("/fruits/:Code", api.Delete)
 
 }
