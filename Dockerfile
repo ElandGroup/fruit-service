@@ -10,4 +10,4 @@ RUN go install
 
 EXPOSE 5000
 
-CMD ["/go/bin/fruit"]
+CMD ["/go/bin/fruit-service"]

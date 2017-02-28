@@ -3,7 +3,7 @@ package helper
 import (
 	"encoding/json"
 	"fmt"
-	. "goApiSample/core"
+	. "fruit-service/core"
 	"reflect"
 	"strconv"
 

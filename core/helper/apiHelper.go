@@ -1,7 +1,7 @@
 package helper
 
 import (
-	. "goApiSample/core"
+	. "fruit-service/core"
 	"reflect"
 	"strings"
 

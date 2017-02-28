@@ -1,6 +1,6 @@
 package dto
 
-import . "goApiSample/core"
+import . "fruit-service/core"
 
 type Fruit struct {
 	Code      string  `xorm:"varchar(20) pk notnull 'Code'"`

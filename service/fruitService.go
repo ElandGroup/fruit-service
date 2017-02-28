@@ -1,10 +1,10 @@
 package service
 
 import (
-	. "goApiSample/core"
-	. "goApiSample/core/dto"
-	"goApiSample/core/helper"
-	"goApiSample/dao"
+	. "fruit-service/core"
+	. "fruit-service/core/dto"
+	"fruit-service/core/helper"
+	"fruit-service/dao"
 	"strings"
 )
 

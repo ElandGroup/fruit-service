@@ -1,11 +1,11 @@
 ﻿package main
 
 import (
-	"goApiSample/api"
-	"goApiSample/config"
+	"fruit-service/api"
+	"fruit-service/config"
 	"net/http"
 
-	"goApiSample/dao"
+	"fruit-service/dao"
 
 	"github.com/labstack/echo"
 )

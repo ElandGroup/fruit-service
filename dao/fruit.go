@@ -1,7 +1,7 @@
 package dao
 
 import (
-	. "goApiSample/core/dto"
+	. "fruit-service/core/dto"
 
 	"github.com/go-xorm/xorm"
 )

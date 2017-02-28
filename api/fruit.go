@@ -1,12 +1,12 @@
 package api
 
 import (
-	"goApiSample/core/helper"
+	"fruit-service/core/helper"
 	"net/http"
 
-	. "goApiSample/core"
-	. "goApiSample/core/dto"
-	"goApiSample/service"
+	. "fruit-service/core"
+	. "fruit-service/core/dto"
+	"fruit-service/service"
 
 	"strings"
 
