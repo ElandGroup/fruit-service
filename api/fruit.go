@@ -44,9 +44,12 @@ func Get(c echo.Context) error {
 	if code := c.Param("Code"); len(code) == 0 {
 		return c.JSON(http.StatusBadRequest, helper.NewApiMessage(10009, "", "Code"))
 
-	} else if _, fruits, err := service.GetFruitService().Get(code); err != nil {
+	} else if has, fruits, err := service.GetFruitService().Get(code); err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.SystemMessage(err.Error()))
 	} else {
+		if has == false {
+			fruits = nil
+		}
 		return c.JSON(http.StatusOK, APIResult{Success: true, Result: fruits})
 	}
 }
