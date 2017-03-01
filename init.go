@@ -3,6 +3,7 @@
 import (
 	"fruit-service/api"
 	"fruit-service/config"
+	"fruit-service/core/helper"
 	"net/http"
 
 	"fruit-service/dao"
@@ -24,7 +25,15 @@ func InitApi(e *echo.Echo) {
 		return c.String(http.StatusOK, "Hello api")
 	})
 
-	v1 := e.Group("/v1")
+	// Route level middleware
+	track := func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			helper.Lang = c.Request().Header["Accept-Language"]
+			return next(c)
+		}
+	}
+
+	v1 := e.Group("/v1", track)
 
 	v1.GET("/fruits", api.Find)
 	v1.GET("/fruits/:Code", api.Get)

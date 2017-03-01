@@ -8,8 +8,8 @@ type (
 	}
 
 	QueryResult struct {
-		TotalCount int         `json:totalCount`
-		Items      interface{} `items`
+		TotalCount int         `json:"totalCount"`
+		Items      interface{} `json:"items"`
 	}
 
 	APIError struct {
