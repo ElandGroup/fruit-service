@@ -9,6 +9,7 @@ import (
 	"fruit-service/dao"
 
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 )
 
 func init() {
@@ -20,7 +21,7 @@ func init() {
 }
 
 func InitApi(e *echo.Echo) {
-
+	e.Use(middleware.CORS())
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello api")
 	})
