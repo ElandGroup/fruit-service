@@ -14,7 +14,6 @@ var MessageMap = map[string]map[int]string{
 		10008: "%v has a wrong format",
 		10009: "Routing is missing parameter: %v",
 
-		10010: "The requested resource does not exist by %v",
 		10011: "Please check the parameters contained in Fields:%v",
 		10012: "There is duplicate data:%v",
 		10013: "Save failed because:%v"},
@@ -29,7 +28,6 @@ var MessageMap = map[string]map[int]string{
 		10008: "%v 有一个错误的格式",
 		10009: "路由缺少参数：%v",
 
-		10010: "请求的资源不存在通过 %v",
 		10011: "请检查Fields所包含的参数：%v",
 		10012: "存在重复的数据：%v",
 		10013: "保存失败，原因是：%v"},
@@ -44,7 +42,6 @@ var MessageMap = map[string]map[int]string{
 		10008: "%v 에 오류 포맷이 존재합니다.",
 		10009: "루팅에 파라미터가 부족합니다. %v",
 
-		10010: "%v 통해 요청한 리소스가 존재하지 않습니다.",
 		10011: "Fields에 포함된 파라미터 %v를 점검하세요.",
 		10012: "중복된 데이터가 존재합니다. %v",
 		10013: "저장실패하였습니다. 원인:%v"},
