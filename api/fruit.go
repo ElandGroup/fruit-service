@@ -59,12 +59,8 @@ func Post(c echo.Context) error {
 	if err := c.Bind(fruitsParam); err != nil {
 		return c.JSON(http.StatusBadRequest, helper.NewApiMessage(10004, err.Error(), "Array"))
 	} else {
-		if apiError := service.GetFruitService().Post(fruitsParam); apiError != nil {
-			if apiError.Code == 10001 {
-				return c.JSON(http.StatusInternalServerError, apiError)
-			} else {
-				return c.JSON(http.StatusOK, apiError)
-			}
+		if apiMessage := service.GetFruitService().Post(fruitsParam); apiMessage != nil {
+			return c.JSON(apiMessage.StatusCode, apiMessage.APIResult)
 		} else {
 			return c.JSON(http.StatusCreated, APIResult{Success: true, Result: nil})
 		}
@@ -96,14 +92,8 @@ func Delete(c echo.Context) error {
 	if code = c.Param("Code"); len(code) == 0 {
 		return c.JSON(http.StatusBadRequest, helper.NewApiMessage(10009, "", "Code"))
 	} else {
-		if apiError := service.GetFruitService().Delete(code); apiError != nil {
-			if apiError.Code == 10001 {
-				return c.JSON(http.StatusInternalServerError, apiError)
-			} else if apiError.Code == 10010 {
-				return c.JSON(http.StatusNotFound, apiError)
-			} else {
-				return c.JSON(http.StatusOK, apiError)
-			}
+		if apiMessage := service.GetFruitService().Delete(code); apiMessage != nil {
+			return c.JSON(apiMessage.StatusCode, apiMessage.APIResult)
 		} else {
 			return c.JSON(http.StatusNoContent, APIResult{Success: true, Result: nil})
 		}

@@ -17,6 +17,10 @@ type (
 		Message string      `json:"message"`
 		Details interface{} `json:"details"`
 	}
+	APIStatusMessage struct {
+		StatusCode int
+		APIResult  *APIResult
+	}
 )
 
 type (

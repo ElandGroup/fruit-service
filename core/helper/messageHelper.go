@@ -54,6 +54,10 @@ func NewApiMessage(resourceKey int, details string, params ...interface{}) *APIR
 	return &APIResult{Success: false, Error: NewApiError(resourceKey, details, params...)}
 }
 
+func NewApiStatusMessage(statusCode int, resourceKey int, details string, params ...interface{}) (apiStatusMessage *APIStatusMessage) {
+	return &APIStatusMessage{StatusCode: statusCode, APIResult: &APIResult{Success: false, Error: NewApiError(resourceKey, details, params...)}}
+}
+
 func ConvJson(anyObject interface{}) (result string, err error) {
 
 	val := reflect.ValueOf(anyObject).Elem()

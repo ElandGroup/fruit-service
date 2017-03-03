@@ -5,6 +5,7 @@ import (
 	. "fruit-service/core/dto"
 	"fruit-service/core/helper"
 	"fruit-service/dao"
+	"net/http"
 	"strings"
 )
 
@@ -19,52 +20,50 @@ func (FruitService) Get(code string) (has bool, fruit *Fruit, err error) {
 	return dao.GetFruitDao().Get(code)
 }
 
-func (f *FruitService) Post(fruit *[]Fruit) (apiError *APIError) {
+func (f *FruitService) Post(fruit *[]Fruit) (apiMessage *APIStatusMessage) {
 	keys := []string{}
 	for _, v := range *fruit {
 		keys = append(keys, v.Code)
 	}
 	dupplicationData, e := f.Exists(keys)
 	if e != nil {
-		apiError = helper.NewApiError(10001, e.Error())
+		apiMessage = helper.NewApiStatusMessage(http.StatusInternalServerError, 10001, e.Error())
 		return
 	} else if len(dupplicationData) != 0 {
-		apiError = helper.NewApiError(10012, "", strings.Join(dupplicationData[:], ","))
+		apiMessage = helper.NewApiStatusMessage(http.StatusOK, 10013, "", helper.MessageString(10012, strings.Join(dupplicationData[:], ",")))
 		return
 	}
 	affectedRows, err := dao.GetFruitDao().Post(fruit)
 	if err != nil {
-		apiError = helper.NewApiError(10001, "", err.Error())
+		apiMessage = helper.NewApiStatusMessage(http.StatusInternalServerError, 10001, "", err.Error())
 	} else if affectedRows == 0 {
-		apiError = helper.NewApiError(10007, "")
+		apiMessage = helper.NewApiStatusMessage(http.StatusOK, 10013, "", helper.MessageString(10007))
 	} else {
-		apiError = nil
+		apiMessage = nil
 	}
 	return
 }
 
 func (FruitService) Patch(code string, fruit *Fruit) (affectedrow int64, err error) {
 	return dao.GetFruitDao().Patch(code, fruit)
-
-	//return model.Db.Id(fruit.Code).Update(fruit)
 }
-func (f *FruitService) Delete(code string) (apiError *APIError) {
+func (f *FruitService) Delete(code string) (apiMessage *APIStatusMessage) {
 	var affectedrow int64
 	var err error
 	var has bool
 	if has, _, err = f.Get(code); err != nil {
-		apiError = helper.NewApiError(10001, err.Error())
+		apiMessage = helper.NewApiStatusMessage(http.StatusInternalServerError, 10001, err.Error())
 		return
 	} else if has == false {
-		apiError = helper.NewApiError(10010, "", "Code:"+code)
+		apiMessage = helper.NewApiStatusMessage(http.StatusOK, 10013, "", helper.MessageString(10005, "Fruit"))
 		return
 	}
 
 	if affectedrow, err = dao.GetFruitDao().Delete(code); err != nil {
-		apiError = helper.NewApiError(10001, err.Error())
+		apiMessage = helper.NewApiStatusMessage(http.StatusInternalServerError, 10001, err.Error())
 		return
 	} else if affectedrow == 0 {
-		apiError = helper.NewApiError(10007, "")
+		apiMessage = helper.NewApiStatusMessage(http.StatusOK, 10013, "", helper.MessageString(10007))
 		return
 	}
 
