@@ -60,11 +60,18 @@ func FilterFieldsMap(objArray interface{}, fields []string) []map[string]interfa
 	for i := 0; i < slice.Len(); i++ {
 		returnMap := make(map[string]interface{})
 		for _, k := range fields {
+			camelCase(&k)
 			returnMap[k], _ = reflections.GetField(slice.Index(i).Interface(), k)
 		}
 		returnMaps = append(returnMaps, returnMap)
 	}
 	return returnMaps
+}
+
+func camelCase(input *string) {
+	if len(*input) != 0 {
+		*input = strings.ToLower((*input)[0:1]) + (*input)[1:]
+	}
 }
 
 func takeArg(arg interface{}, kind reflect.Kind) (val reflect.Value, ok bool) {
