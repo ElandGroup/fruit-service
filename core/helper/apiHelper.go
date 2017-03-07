@@ -57,11 +57,13 @@ func CheckQueryCondition(dto *APIParam, checkStruct interface{}) (apiResult *API
 func FilterFieldsMap(objArray interface{}, fields []string) []map[string]interface{} {
 	slice, _ := takeArg(objArray, reflect.Slice)
 	returnMaps := []map[string]interface{}{}
+	oldK := ""
 	for i := 0; i < slice.Len(); i++ {
 		returnMap := make(map[string]interface{})
 		for _, k := range fields {
+			oldK = k
 			camelCase(&k)
-			returnMap[k], _ = reflections.GetField(slice.Index(i).Interface(), k)
+			returnMap[k], _ = reflections.GetField(slice.Index(i).Interface(), oldK)
 		}
 		returnMaps = append(returnMaps, returnMap)
 	}
