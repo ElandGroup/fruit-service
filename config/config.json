@@ -5,6 +5,9 @@
     },
      "SampleMysql":{
          "Conn":"root:Eland123@tcp(10.202.101.13:3306)/sampledb?charset=utf8&parseTime=True&loc=UTC"
-    }
+    },
+    "DefaultCount":10,
+    "MaxResultCount":10000
+
 
 }

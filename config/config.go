@@ -9,6 +9,8 @@ var Config = struct {
 	SampleMysql struct {
 		Conn string `json:"Conn"`
 	} `json:"SampleMysql"`
+	DefaultCount   string `json:"DefaultCount"`
+	MaxResultCount string `json:"MaxResultCount"`
 }{}
 
 func InitConfig(cfg string) {

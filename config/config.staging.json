@@ -2,6 +2,8 @@
 
     "Sample":{
          "Conn":"Provider=SQLOLEDB;Data Source=182.92.65.253,1433;Initial Catalog=epay;User ID=epay;password=epay;"
-    }
+    },
+    "DefaultCount":10,
+    "MaxResultCount":10000
 
 }

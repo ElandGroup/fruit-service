@@ -1,8 +1,10 @@
 package helper
 
 import (
+	"fruit-service/config"
 	. "fruit-service/core"
 	"reflect"
+	"strconv"
 	"strings"
 
 	reflections "gopkg.in/oleiade/reflections.v1"
@@ -14,7 +16,8 @@ func CheckQueryCondition(dto *APIParam, checkStruct interface{}) (apiResult *API
 		var ok bool
 		fields := strings.Split(dto.Fields, ",")
 		for _, v := range fields {
-			if ok, err = reflections.HasField(checkStruct, v); err != nil || ok == false {
+
+			if ok, err = reflections.HasField(checkStruct, PascalCase(v)); err != nil || ok == false {
 				dto = nil
 				apiResult = NewApiMessage(10011, "", v)
 				return
@@ -22,9 +25,13 @@ func CheckQueryCondition(dto *APIParam, checkStruct interface{}) (apiResult *API
 		}
 	}
 	if dto.MaxResultCount == 0 {
-		dto.MaxResultCount = 10
-	} else if dto.MaxResultCount > 10000 {
-		dto.MaxResultCount = 10000
+		i, _ := strconv.ParseInt(config.Config.DefaultCount, 10, 32)
+		dto.MaxResultCount = int(i)
+	} else {
+		i, _ := strconv.ParseInt(config.Config.MaxResultCount, 10, 32)
+		if dto.MaxResultCount > int(i) {
+			dto.MaxResultCount = int(i)
+		}
 	}
 
 	if len(dto.Sort) != 0 {
@@ -37,7 +44,7 @@ func CheckQueryCondition(dto *APIParam, checkStruct interface{}) (apiResult *API
 				dto.SortAsc += "," + v
 			}
 
-			if ok, err := reflections.HasField(checkStruct, v); err != nil || ok == false {
+			if ok, err := reflections.HasField(checkStruct, PascalCase(v)); err != nil || ok == false {
 				dto = nil
 				apiResult = NewApiMessage(10011, "", v)
 				return
@@ -57,23 +64,23 @@ func CheckQueryCondition(dto *APIParam, checkStruct interface{}) (apiResult *API
 func FilterFieldsMap(objArray interface{}, fields []string) []map[string]interface{} {
 	slice, _ := takeArg(objArray, reflect.Slice)
 	returnMaps := []map[string]interface{}{}
-	oldK := ""
+	fieldMap := ResultMap(fields)
 	for i := 0; i < slice.Len(); i++ {
 		returnMap := make(map[string]interface{})
-		for _, k := range fields {
-			oldK = k
-			camelCase(&k)
-			returnMap[k], _ = reflections.GetField(slice.Index(i).Interface(), oldK)
+		for k, v := range fieldMap {
+			returnMap[k], _ = reflections.GetField(slice.Index(i).Interface(), v)
 		}
 		returnMaps = append(returnMaps, returnMap)
 	}
 	return returnMaps
 }
 
-func camelCase(input *string) {
-	if len(*input) != 0 {
-		*input = strings.ToLower((*input)[0:1]) + (*input)[1:]
+func ResultMap(keys []string) map[string]string {
+	result := make(map[string]string, 0)
+	for _, v := range keys {
+		result[CamelCase(v)] = PascalCase(v)
 	}
+	return result
 }
 
 func takeArg(arg interface{}, kind reflect.Kind) (val reflect.Value, ok bool) {
