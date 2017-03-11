@@ -4,7 +4,17 @@ import (
 	"errors"
 	"reflect"
 	"strconv"
+
+	"strings"
+
+	"github.com/labstack/echo"
 )
+
+func Bind(ptr interface{}, c echo.Context) error {
+	params := c.QueryParams()
+	LowerMapKey(params)
+	return BindData(ptr, params)
+}
 
 func BindData(ptr interface{}, data map[string][]string) error {
 
@@ -36,12 +46,9 @@ func BindData(ptr interface{}, data map[string][]string) error {
 			}
 		}
 
-		inputValue, exists := data[PascalCase(inputFieldName)]
+		inputValue, exists := data[strings.ToLower(inputFieldName)]
 		if !exists {
-			inputValue, exists = data[CamelCase(inputFieldName)]
-			if !exists {
-				continue
-			}
+			continue
 		}
 
 		numElems := len(inputValue)

@@ -16,7 +16,7 @@ import (
 func Find(c echo.Context) error {
 	dto := FruitQuery{}
 	//1.check request format
-	if err := helper.BindData(&dto, c.QueryParams()); err != nil {
+	if err := helper.Bind(&dto, c); err != nil {
 		return c.JSON(http.StatusBadRequest, helper.NewApiMessage(10004, err.Error(), "Object"))
 	}
 	//1.check condition

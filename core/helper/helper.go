@@ -15,3 +15,10 @@ func PascalCase(input string) string {
 	}
 	return input
 }
+
+func LowerMapKey(data map[string][]string) {
+	for k, v := range data {
+		delete(data, k)
+		data[strings.ToLower(k)] = v
+	}
+}
