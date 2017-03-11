@@ -10,10 +10,27 @@ import (
 	"github.com/labstack/echo"
 )
 
-func Bind(ptr interface{}, c echo.Context) error {
+func QueryParamLower(name string, c echo.Context) string {
+	return strings.ToLower(QueryParam(name, c))
+}
+func QueryParam(name string, c echo.Context) string {
 	params := c.QueryParams()
 	LowerMapKey(params)
-	return BindData(ptr, params)
+	return params.Get(name)
+}
+
+func Param(name string, c echo.Context) string {
+	return c.Param(name)
+}
+
+func Bind(ptr interface{}, c echo.Context) error {
+	req := c.Request()
+	if req.Method == "GET" {
+		params := c.QueryParams()
+		LowerMapKey(params)
+		return BindData(ptr, params)
+	}
+	return c.Bind(ptr)
 }
 
 func BindData(ptr interface{}, data map[string][]string) error {

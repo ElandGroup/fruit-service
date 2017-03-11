@@ -41,7 +41,7 @@ func Find(c echo.Context) error {
 }
 
 func Get(c echo.Context) error {
-	if code := c.Param("Code"); len(code) == 0 {
+	if code := helper.Param("Code", c); len(code) == 0 {
 		return c.JSON(http.StatusBadRequest, helper.NewApiMessage(10009, "", "Code"))
 
 	} else if has, fruits, err := service.GetFruitService().Get(code); err != nil {
@@ -56,7 +56,7 @@ func Get(c echo.Context) error {
 
 func Post(c echo.Context) error {
 	fruitsParam := new([]Fruit)
-	if err := c.Bind(fruitsParam); err != nil {
+	if err := helper.Bind(fruitsParam, c); err != nil {
 		return c.JSON(http.StatusBadRequest, helper.NewApiMessage(10004, err.Error(), "Array"))
 	} else {
 		if apiMessage := service.GetFruitService().Post(fruitsParam); apiMessage != nil {
@@ -69,11 +69,11 @@ func Post(c echo.Context) error {
 
 func Patch(c echo.Context) error {
 	var code string
-	if code = c.Param("Code"); len(code) == 0 {
+	if code = helper.Param("Code", c); len(code) == 0 {
 		return c.JSON(http.StatusBadRequest, helper.NewApiMessage(10009, "", "Code"))
 	}
 	fruitsParam := new(Fruit)
-	if err := c.Bind(fruitsParam); err != nil {
+	if err := helper.Bind(fruitsParam, c); err != nil {
 		return c.JSON(http.StatusBadRequest, helper.NewApiMessage(10004, err.Error(), "Object"))
 	} else {
 
@@ -88,8 +88,7 @@ func Patch(c echo.Context) error {
 }
 
 func Delete(c echo.Context) error {
-	var code string
-	if code = c.Param("Code"); len(code) == 0 {
+	if code := helper.Param("Code", c); len(code) == 0 {
 		return c.JSON(http.StatusBadRequest, helper.NewApiMessage(10009, "", "Code"))
 	} else {
 		if apiMessage := service.GetFruitService().Delete(code); apiMessage != nil {
