@@ -1,15 +1,11 @@
 package dao
 
-import (
-	. "fruit-service/core/dto"
-
-	"github.com/go-xorm/xorm"
-)
+import . "fruit-service/core/dto"
 
 type FruitDao struct{}
 
 func (f FruitDao) Find(fruitQuery *FruitQuery) (fruits []Fruit, err error) {
-	session := f.Query(fruitQuery)
+	session := Filter(&fruitQuery.APIParam)
 	err = session.Find(&fruits)
 	return
 }
@@ -39,35 +35,4 @@ func (FruitDao) Patch(code string, fruit *Fruit) (affectedrow int64, err error) 
 func (FruitDao) Delete(code string) (affectedrow int64, err error) {
 	fruit := &Fruit{Code: code}
 	return Db.Where("code=?", code).Delete(fruit)
-}
-
-func (FruitDao) Query(dto *FruitQuery) (session *xorm.Session) {
-	sqlText := ""
-	if len(dto.Fields) != 0 {
-		// fields := strings.Split(dto.Fields, ",")
-		// newFields := ""
-		// for _, v := range fields {
-		// 	newFields += v + ","
-		// }
-		// if len(newFields) != 0 {
-		// 	newFields = newFields[0 : len(newFields)-1]
-		// }
-		sqlText += dto.Fields
-	} else {
-		sqlText += `
-			Code     
-			,Name     
-			,Price     
-			,Color    
-			,StoreCode
-		`
-	}
-	session = Db.Select(sqlText).Limit(dto.MaxResultCount, dto.SkipCount)
-	if len(dto.SortAsc) != 0 {
-		session.Asc(dto.SortAsc)
-	}
-	if len(dto.SortDesc) != 0 {
-		session.Desc(dto.SortDesc)
-	}
-	return
 }
